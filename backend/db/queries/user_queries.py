@@ -1,5 +1,6 @@
 from backend.db.connection import session_scope
 from backend.db.models import User
+from werkzeug.security import check_password_hash
 
 #     with session_scope() as session:
 def create_user(username, password_hash):
@@ -13,10 +14,10 @@ def is_existing_user(username):
     with session_scope() as session:
         user = session.query(User).filter(User.username==username).first()
         return user is not None
-def is_valid_login(username, password_hash):
+def is_valid_login(username, password):
     '''verifies the username and password_hash combo is correct'''
     with session_scope() as session:
         user = session.query(User).filter(User.username==username).first()
         if user:
-            return user.password_hash == password_hash
+            return check_password_hash(user.password_hash, password)
         return False
