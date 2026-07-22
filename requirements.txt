@@ -1,5 +1,8 @@
+Flask~=3.0
+Werkzeug~=3.0
 SQLAlchemy~=2.0.51
 config~=0.5.1
 requests==2.32.3
 google-genai==2.10.0
 python-dotenv==1.0.1
+pgeocode==0.5.0

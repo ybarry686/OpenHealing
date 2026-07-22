@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} · Family Loss & Grief Support{% endblock %}
+{% block content %}
+<section class="post-page">
+  <p><a href="{{ url_for('forum.forum_home') }}">&larr; Back to forum</a></p>
+
+  <article class="post-card">
+    <h1>
+      {{ post.title }}
+      {% if post.category %}<span class="post-category">{{ post.category }}</span>{% endif %}
+    </h1>
+    <p class="post-meta">{{ post.username }} &middot; {{ post.created_at.strftime('%b %-d, %Y') if post.created_at else '' }}</p>
+    <p class="post-body">{{ post.body }}</p>
+  </article>
+</section>
+{% endblock %}

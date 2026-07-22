@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Sign up · Family Loss & Grief Support{% endblock %}
+{% block content %}
+<section class="form-page narrow">
+  <h1>Sign up</h1>
+  <form method="post" class="stacked-form">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" maxlength="20" required>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+    <button type="submit" class="cta">Create account</button>
+  </form>
+  <p class="muted">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</section>
+{% endblock %}

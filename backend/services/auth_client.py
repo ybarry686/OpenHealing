@@ -1,4 +1,4 @@
-from werkzueg.security import generate_password_hash
+from werkzeug.security import generate_password_hash
 
 from backend.db.queries.user_queries import (
     create_user, 

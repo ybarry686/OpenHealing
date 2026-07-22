@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}Find Help · Hope & Healing{% endblock %}
+{% block content %}
+<div class="page">
+  <span class="eyebrow">Find help</span>
+  <h1>Local care, matched to what you need today.</h1>
+  <p class="lede">Search nearby options and get a short recommendation, and related reading.</p>
+
+  <div class="search-layout">
+    <form id="find-help-form" class="stacked-form">
+      <label for="query">I'm looking for</label>
+      <input type="text" id="query" name="query" placeholder="Grief counselor or therapist" required>
+
+      <label for="zip_code">Location</label>
+      <input type="text" id="zip_code" name="zip_code" placeholder="ZIP code, e.g. 90012" inputmode="numeric" maxlength="10">
+      <p class="muted">Your location is used only to shape this search. Leave blank to use your estimated location.</p>
+
+      <label>Focus (optional)</label>
+      <div class="topic-tabs" id="identity-filters">
+        <button type="button" class="topic-tab active" data-identity="">No preference</button>
+        <button type="button" class="topic-tab" data-identity="lgbtq">LGBTQ+</button>
+        <button type="button" class="topic-tab" data-identity="black">Black</button>
+        <button type="button" class="topic-tab" data-identity="latino">Latino/Hispanic</button>
+        <button type="button" class="topic-tab" data-identity="asian">Asian American</button>
+        <button type="button" class="topic-tab" data-identity="indigenous">Indigenous</button>
+        <button type="button" class="topic-tab" data-identity="first_gen">First-gen immigrant</button>
+      </div>
+      <input type="hidden" id="identity" name="identity" value="">
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="include_community" name="include_community">
+        Also include free community centers, hospices &amp; religious support groups
+      </label>
+
+      <button type="submit" class="cta" id="search-btn">Show nearby support</button>
+    </form>
+
+    <div id="map"></div>
+  </div>
+
+  <p id="find-help-error" class="flash flash-error" hidden></p>
+  <p id="find-help-loading" class="loading-state" hidden>Searching nearby resources&hellip;</p>
+
+  <div id="find-help-results" hidden>
+    <div class="recommendation-box">
+      <span class="eyebrow">A note for you</span>
+      <p id="recommendation-text"></p>
+    </div>
+
+    <h2>Nearby options</h2>
+    <div id="resource-list" class="result-list"></div>
+
+    <h2>Related articles</h2>
+    <div id="article-list" class="article-list"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script>
+  const form = document.getElementById("find-help-form");
+  const errorBox = document.getElementById("find-help-error");
+  const loadingBox = document.getElementById("find-help-loading");
+  const resultsBox = document.getElementById("find-help-results");
+  const searchBtn = document.getElementById("search-btn");
+  const identityInput = document.getElementById("identity");
+
+  document.querySelectorAll("#identity-filters .topic-tab").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#identity-filters .topic-tab").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      identityInput.value = btn.dataset.identity;
+    });
+  });
+
+  if (typeof renderDefaultMap === "function") {
+    renderDefaultMap();
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const query = document.getElementById("query").value.trim();
+    const zipCode = document.getElementById("zip_code").value.trim();
+    const identity = identityInput.value;
+    const includeCommunity = document.getElementById("include_community").checked;
+
+    errorBox.hidden = true;
+    resultsBox.hidden = true;
+    loadingBox.hidden = false;
+    searchBtn.disabled = true;
+
+    try {
+      const params = new URLSearchParams({ query });
+      if (zipCode) params.set("zip_code", zipCode);
+      if (identity) params.set("identity", identity);
+      if (includeCommunity) params.set("include_community", "1");
+
+      const response = await fetch(`{{ url_for('resources.get_resources') }}?${params.toString()}`);
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Something went wrong. Please try again.");
+      }
+
+      renderResults(data, zipCode);
+    } catch (err) {
+      errorBox.textContent = err.message;
+      errorBox.hidden = false;
+    } finally {
+      loadingBox.hidden = true;
+      searchBtn.disabled = false;
+    }
+  });
+
+  function renderResults(data, zipCode) {
+    document.getElementById("recommendation-text").textContent = data.recommendation || "No recommendation available.";
+
+    const resourceList = document.getElementById("resource-list");
+    resourceList.innerHTML = "";
+    if (data.resources && data.resources.length) {
+      data.resources.forEach((r) => {
+        const card = document.createElement("div");
+        card.className = "result-card";
+        card.innerHTML = `
+          <h3>${escapeHtml(r.name)}</h3>
+          <p class="muted">${escapeHtml(r.address || "")}</p>
+          <p class="result-meta">
+            ${r.phone ? `<span>${escapeHtml(r.phone)}</span>` : ""}
+            ${r.rating ? `<span>&#9733; ${escapeHtml(String(r.rating))}</span>` : ""}
+          </p>
+          ${r.website ? `<a href="${escapeAttr(r.website)}" target="_blank" rel="noopener">Visit website</a>` : ""}
+        `;
+        resourceList.appendChild(card);
+      });
+    } else {
+      resourceList.innerHTML = '<p class="empty-state">No nearby results right now &mdash; try a broader search term.</p>';
+    }
+
+    const articleList = document.getElementById("article-list");
+    articleList.innerHTML = "";
+    if (data.articles && data.articles.length) {
+      data.articles.forEach((a) => {
+        const card = document.createElement("a");
+        card.className = "article-card";
+        card.href = a.url || "#";
+        card.target = "_blank";
+        card.rel = "noopener";
+        card.innerHTML = `
+          ${a.image ? `<img src="${escapeAttr(a.image)}" alt="" loading="lazy">` : ""}
+          <div class="article-card-body">
+            <h3>${escapeHtml(a.title)}</h3>
+            <p>${escapeHtml(a.summary || "")}</p>
+            <span class="read-link">Read article &rarr;</span>
+          </div>
+        `;
+        articleList.appendChild(card);
+      });
+    } else {
+      articleList.innerHTML = '<p class="empty-state">No articles available right now.</p>';
+    }
+
+    if (typeof renderMap === "function") {
+      renderMap(data.resources || [], zipCode);
+    }
+
+    resultsBox.hidden = false;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str == null ? "" : str;
+    return div.innerHTML;
+  }
+
+  function escapeAttr(str) {
+    return escapeHtml(str).replace(/"/g, "&quot;");
+  }
+</script>
+{% endblock %}
