@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Family Loss & Grief Support{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="crisis-banner">
+    <span>In crisis or need to talk right now? <strong>988 Suicide &amp; Crisis Lifeline</strong> is free, confidential, and available 24/7.</span>
+    <a href="tel:988" class="crisis-cta">Call or text 988</a>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('main.home') }}">Family Loss &amp; Grief Support</a>
+    <nav>
+      <a href="{{ url_for('main.home') }}">Home</a>
+      <a href="{{ url_for('findhelp.find_help') }}">Find Help</a>
+      <a href="{{ url_for('resources.resources_page') }}">Resources</a>
+      <a href="{{ url_for('forum.forum_home') }}">Forum</a>
+      {% if session.username %}
+        <span class="muted">Hi, {{ session.username }}</span>
+        <a href="{{ url_for('auth.logout') }}">Log out</a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Log in</a>
+        <a href="{{ url_for('auth.signup') }}" class="cta">Sign up</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="page">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>You are not alone. 988 Suicide &amp; Crisis Lifeline &middot; <a href="tel:988">988</a> &middot; <a href="https://988lifeline.org" target="_blank" rel="noopener">988lifeline.org</a></p>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

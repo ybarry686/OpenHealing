@@ -14,6 +14,7 @@ def is_existing_user(username):
     with session_scope() as session:
         user = session.query(User).filter(User.username==username).first()
         return user is not None
+
 def is_valid_login(username, password):
     '''verifies the username and password_hash combo is correct'''
     with session_scope() as session:
@@ -21,3 +22,9 @@ def is_valid_login(username, password):
         if user:
             return check_password_hash(user.password_hash, password)
         return False
+
+def get_user_id(username):
+    '''looks up a user's id by username, used when creating a post'''
+    with session_scope() as session:
+        user = session.query(User).filter(User.username == username).first()
+        return user.id if user else None

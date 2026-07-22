@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Hope & Healing &middot; Grief & Family Loss Support{% endblock %}
+{% block content %}
+<div class="page tight-bottom">
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Grief support, all in one place</span>
+      <h1>You don't have to figure this out alone.</h1>
+      <p class="lede">Find nearby care, reliable guidance, and a community that understands loss &mdash; at your pace.</p>
+      <div class="hero-actions">
+        <a href="{{ url_for('findhelp.find_help') }}" class="cta">Find help near me</a>
+        <a href="{{ url_for('forum.forum_home') }}" class="text-link">Explore the community &rarr;</a>
+      </div>
+      <p class="disclaimer">A supportive starting point &mdash; not a replacement for emergency care or a licensed professional.</p>
+    </div>
+
+    <div class="begin-panel">
+      <h2>A gentle place to begin</h2>
+      <div class="begin-item">
+        <span class="begin-num">01</span>
+        <div>
+          <h3>Find care nearby</h3>
+          <p>Therapists, counselors, and groups</p>
+        </div>
+      </div>
+      <div class="begin-item">
+        <span class="begin-num">02</span>
+        <div>
+          <h3>Learn from trusted resources</h3>
+          <p>Curated mental health information</p>
+        </div>
+      </div>
+      <div class="begin-item">
+        <span class="begin-num">03</span>
+        <div>
+          <h3>Feel less alone</h3>
+          <p>Read and share with peers</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="band-peach">
+  <div class="page">
+    <div class="split">
+      <div>
+        <span class="eyebrow">Trusted resources</span>
+        <h2>Reliable information, when you're ready for it.</h2>
+        <p class="lede">Browse clear, carefully chosen articles on grief, trauma, stress, anxiety, and how to support someone after a loss.</p>
+        <a href="{{ url_for('resources.resources_page') }}" class="cta outline">Browse all resources</a>
+      </div>
+      <div class="article-list">
+        {% for a in articles %}
+          <a class="article-card" href="{{ a.url }}" target="_blank" rel="noopener">
+            {% if a.image %}<img src="{{ a.image }}" alt="" loading="lazy">{% endif %}
+            <div class="article-card-body">
+              <h3>{{ a.title }}</h3>
+              <p>{{ a.summary|truncate(140) }}</p>
+              <span class="read-link">Read article &rarr;</span>
+            </div>
+          </a>
+        {% else %}
+          <p class="empty-state">No articles available right now.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band-white">
+  <div class="page">
+    <div class="split">
+      <div>
+        <span class="eyebrow">Community</span>
+        <h2>Read and share, whenever you're ready.</h2>
+        <p class="lede">A space to read what others are going through and share your own experience, at whatever pace feels right.</p>
+        <a href="{{ url_for('forum.forum_home') }}" class="cta outline">Visit the community</a>
+      </div>
+      <div class="post-list">
+        {% for p in posts %}
+          <article class="post-card">
+            <h3><a href="{{ url_for('forum.view_post', post_id=p.id) }}">{{ p.title }}</a></h3>
+            <p class="post-meta">{{ p.username }} &middot; {{ p.created_at.strftime('%b %-d, %Y') if p.created_at else '' }}</p>
+            <p class="post-body">{{ p.body[:160] }}{% if p.body|length > 160 %}&hellip;{% endif %}</p>
+          </article>
+        {% else %}
+          <p class="empty-state">No posts yet &mdash; be the first to share.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

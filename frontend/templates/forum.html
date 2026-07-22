@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Community Forum · Family Loss & Grief Support{% endblock %}
+{% block content %}
+<section class="forum-page">
+  <h1>Community Forum</h1>
+  <p class="lede">A space to read and share with others who understand.</p>
+
+  {% if session.username %}
+    <form method="post" action="{{ url_for('forum.new_post') }}" class="stacked-form">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" maxlength="200" required>
+
+      <label for="category">Category (optional)</label>
+      <input type="text" id="category" name="category" maxlength="50" placeholder="e.g. loss of a parent, anniversary, coping">
+
+      <label for="body">Message</label>
+      <textarea id="body" name="body" rows="4" required></textarea>
+
+      <button type="submit" class="cta">Post</button>
+    </form>
+  {% else %}
+    <p class="empty-state">
+      <a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.signup') }}">sign up</a> to share your own post.
+    </p>
+  {% endif %}
+
+  <div class="post-list">
+    {% for p in posts %}
+      <article class="post-card">
+        <h3>
+          <a href="{{ url_for('forum.view_post', post_id=p.id) }}">{{ p.title }}</a>
+          {% if p.category %}<span class="post-category">{{ p.category }}</span>{% endif %}
+        </h3>
+        <p class="post-meta">{{ p.username }} &middot; {{ p.created_at.strftime('%b %-d, %Y') if p.created_at else '' }}</p>
+        <p class="post-body">{{ p.body[:280] }}{% if p.body|length > 280 %}&hellip;{% endif %}</p>
+      </article>
+    {% else %}
+      <p class="empty-state">No posts yet &mdash; be the first to share.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

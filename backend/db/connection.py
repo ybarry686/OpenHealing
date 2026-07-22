@@ -1,7 +1,7 @@
 from contextlib import contextmanager # context manager
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import declarative_base, sessionmaker
-from config import Config
+from backend.config import Config
 
 engine = create_engine(f"sqlite:///{Config.DATABASE_PATH}")
 Base = declarative_base()
@@ -31,5 +31,3 @@ def session_scope():
         raise # show error
     finally:
         session.close()
-
-
