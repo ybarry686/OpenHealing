@@ -3,7 +3,7 @@ import unittest
 from backend.services.articles_client import search_articles
 
 
-class TestArticlesIntegration(unittest.TestCase):
+class TestArticleSearch(unittest.TestCase):
 
     def test_search_returns_results(self):
         articles = search_articles("grief")
