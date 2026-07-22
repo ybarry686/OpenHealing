@@ -20,32 +20,32 @@ def build_prompt(user_message, resources, articles):
             + "\n\n"
         )
 
-        articles_text = ""
+    articles_text = ""
 
-        for article in articles:
-            articles_text += (
-                "Title: "
-                + article.get("title", "Unknown article")
-                + "\nSummary: "
-                + article.get("summary", "No summary available")
-                + "\n\n"
-            )
-
-        prompt = (
-            "The user is looking for support after a difficult or traumatic situation.\n\n"
-            + "User message:\n"
-            + user_message
-            + "\n\nNearby resources:\n"
-            + resources_text
-            + "\nTrusted articles:\n"
-            + articles_text
-            + "\nGive the user a short and supportive recommendation. "
-            + "Only use the resources and articles listed above. "
-            + "Do not diagnose the user, provide therapy, or invent information. "
-            + "If the user may be in immediate danger, tell them to contact emergency services."
+    for article in articles:
+        articles_text += (
+            "Title: "
+            + article.get("title", "Unknown article")
+            + "\nSummary: "
+            + article.get("summary", "No summary available")
+            + "\n\n"
         )
 
-        return prompt
+    prompt = (
+        "The user is looking for support after a difficult or traumatic situation.\n\n"
+        + "User message:\n"
+        + user_message
+        + "\n\nNearby resources:\n"
+        + resources_text
+        + "\nTrusted articles:\n"
+        + articles_text
+        + "\nGive the user a short and supportive recommendation. "
+        + "Only use the resources and articles listed above. "
+        + "Do not diagnose the user, provide therapy, or invent information. "
+        + "If the user may be in immediate danger, tell them to contact emergency services."
+    )
+
+    return prompt
 
 
 def get_recommendation(user_message, resources, articles):
