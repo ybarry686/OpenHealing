@@ -3,9 +3,9 @@
 OpenHealing helps people experiencing grief discover trusted resources, connect with community support, and access professional care; onboarding for licensed clinicians is planned.
 
 ## 🤲 Why OpenHealing 
-- Grief & mental health gap: **~137M Americans** live in shortage areas.
-- Discovery problem: only **46%** know where to turn; resources often exist but go unfound.
-- Persistent need: **54%** struggle to find resources; **57%** see support fade after months.
+- **Grief & mental health gap: ~137M Americans** live in shortage areas.
+- **Discovery problem: only 46%** know where to turn; resources often exist but go unfound.
+- **Persistent need: 54%** struggle to find resources; **57%** see support fade after months.
 
 
 ## Key features
