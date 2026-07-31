@@ -1,6 +1,6 @@
 # OpenHealing
 
-A compassionate app that helps people experiencing grief discover trusted resources, connect with community support, and access professional care; onboarding for licensed clinicians is planned.
+OpenHealing connects people experiencing grief discover trusted resources, connect with community support, and access professional care; onboarding for licensed clinicians is planned.
 
 ## Why OpenHealing
 - Grief & mental health gap: **~137M Americans** live in shortage areas.
@@ -13,12 +13,6 @@ A compassionate app that helps people experiencing grief discover trusted resour
 - Find local resources on a map
 - Community forum for ongoing peer support
 - LLM-backed recommendations for tailored guidance
-
-
-## Tech stack
-- Python 3.11+, Flask 3.x
-- SQLAlchemy 2.x, SQLite (dev), Postgres recommended for prod
-- `requests`, `pgeocode`, `google-genai`
 
 ## Quick start
 1. Create venv and install:
@@ -42,8 +36,6 @@ setx SERPAPI_KEY "<your-key>"
 ```powershell
 python backend/app.py
 ```
-
-Open http://localhost:5001/
 
 ## Tests
 - Run unit tests:
