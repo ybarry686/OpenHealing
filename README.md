@@ -1,4 +1,4 @@
-# OpenHealing
+# OpenHealing 🤲
 
 OpenHealing helps people experiencing grief discover trusted resources, connect with community support, and access professional care; onboarding for licensed clinicians is planned.
 
