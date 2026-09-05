@@ -48,4 +48,4 @@ pip install pytest
 pytest -q
 ```
 
-For API details and schema, see `/docs`.
+For API and schema details, see `/docs`.
