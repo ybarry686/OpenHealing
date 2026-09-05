@@ -34,7 +34,7 @@ setx SERPAPI_KEY "<your-key>"
 3. Run locally:
 
 ```powershell
-python backend/app.py
+python -m backend.app
 ```
 
 ## Tests
